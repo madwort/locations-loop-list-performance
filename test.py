@@ -1,20 +1,20 @@
 import datetime
 from faker import Faker
 from faker.providers import address
+import random
 from tqdm import tqdm
 
 fake = Faker()
+fake.add_provider(address)
 
 print(datetime.datetime.now())
 
-fake.add_provider(address)
-
 trial_list = []
-
 for n in range(20000):
     mylocations = []
-    for n in range(5):
-        mylocations.append({"address":fake.street_address()})
+    if (random.random() > 0.5):
+        for n in range(5):
+            mylocations.append({"address":fake.street_address()})
     trial_list.append(
         {
             "name": fake.name(),
@@ -27,7 +27,6 @@ for n in range(20000):
 
 before_time = datetime.datetime.now()
 print(before_time)
-
 
 locations_list = []
 for x in trial_list:
