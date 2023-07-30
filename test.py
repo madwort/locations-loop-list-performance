@@ -75,13 +75,13 @@ def tom_version2(trial_list):
     return locations_list
 
 setup = "from __main__ import original_version, trial_list"
-print(timeit.timeit("original_version(trial_list)", setup=setup, number=1))
+print(f"Original: {timeit.timeit('original_version(trial_list)', setup=setup, number=1)}")
 
 setup = "from __main__ import chatgpt_version, trial_list"
-print(timeit.timeit("chatgpt_version(trial_list)", setup=setup, number=1))
+print(f"ChatGPT: {timeit.timeit('chatgpt_version(trial_list)', setup=setup, number=1)}")
 
 setup = "from __main__ import tom_version, trial_list"
-print(timeit.timeit("tom_version(trial_list)", setup=setup, number=1))
+print(f"TomW (try/except): {timeit.timeit('tom_version(trial_list)', setup=setup, number=1)}")
 
 setup = "from __main__ import tom_version2, trial_list"
-print(timeit.timeit("tom_version2(trial_list)", setup=setup, number=1))
+print(f"TomW (if): {timeit.timeit('tom_version2(trial_list)', setup=setup, number=1)}")
