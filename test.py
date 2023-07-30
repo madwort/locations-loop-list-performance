@@ -2,12 +2,11 @@ import datetime
 from faker import Faker
 from faker.providers import address
 import random
+import timeit
 from tqdm import tqdm
 
 fake = Faker()
 fake.add_provider(address)
-
-print(datetime.datetime.now())
 
 trial_list = []
 for n in range(40000):
@@ -63,45 +62,11 @@ def tom_version(trial_list):
                 locations_list.append(l)
     return locations_list
 
-before_time = datetime.datetime.now()
-print(before_time)
+setup = "from __main__ import original_version, trial_list"
+print(timeit.timeit("original_version(trial_list)", setup=setup, number=1))
 
-locations_list_1 = original_version(trial_list)
+setup = "from __main__ import chatgpt_version, trial_list"
+print(timeit.timeit("chatgpt_version(trial_list)", setup=setup, number=1))
 
-after_time = datetime.datetime.now()
-print(after_time)
-
-time_difference = after_time - before_time
-print(time_difference)
-
-print("-------")
-
-before_time = datetime.datetime.now()
-print(before_time)
-
-locations_list_2 = chatgpt_version(trial_list)
-
-after_time = datetime.datetime.now()
-print(after_time)
-
-time_difference = after_time - before_time
-print(time_difference)
-
-assert(locations_list_1 == locations_list_2)
-print(locations_list_1[0])
-print(locations_list_2[0])
-
-print("-------")
-
-before_time = datetime.datetime.now()
-print(before_time)
-
-locations_list_3 = tom_version(trial_list)
-
-after_time = datetime.datetime.now()
-print(after_time)
-
-time_difference = after_time - before_time
-print(time_difference)
-
-assert(locations_list_1 == locations_list_3)
+setup = "from __main__ import tom_version, trial_list"
+print(timeit.timeit("tom_version(trial_list)", setup=setup, number=1))
