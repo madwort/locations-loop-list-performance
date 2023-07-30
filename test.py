@@ -10,20 +10,28 @@ fake.add_provider(address)
 print(datetime.datetime.now())
 
 trial_list = []
-for n in range(20000):
+for n in range(40000):
     mylocations = []
+    for n in range(5):
+        mylocations.append({"address":fake.street_address()})
     if (random.random() > 0.5):
-        for n in range(5):
-            mylocations.append({"address":fake.street_address()})
-    trial_list.append(
-        {
-            "name": fake.name(),
-            "protocolSection": {
-                "contactsLocationsModule": {"locations": mylocations},
-                "identificationModule": {"nctId": "1234abc"}
-            },
-        }
-    )
+        trial_list.append(
+            {
+                "name": fake.name(),
+                "protocolSection": {
+                    "contactsLocationsModule": {"locations": mylocations},
+                    "identificationModule": {"nctId": "1234abc"}
+                },
+            }
+        )
+    else:
+        trial_list.append(
+            {
+                "name": fake.name(),
+                "protocolSection": {},
+            }
+        )
+        
 
 before_time = datetime.datetime.now()
 print(before_time)
