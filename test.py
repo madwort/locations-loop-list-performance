@@ -55,6 +55,18 @@ def chatgpt_version(trial_list):
 def tom_version(trial_list):
     locations_list = []
     for x in trial_list:
+        try:
+            locations = x['protocolSection']['contactsLocationsModule']['locations']
+            for l in locations:
+                l.update({'nctid':x['protocolSection']['identificationModule']['nctId']})
+                locations_list.append(l)
+        except KeyError:
+            pass
+    return locations_list
+
+def tom_version2(trial_list):
+    locations_list = []
+    for x in trial_list:
         if 'contactsLocationsModule' in x['protocolSection'] and 'locations' in x['protocolSection']['contactsLocationsModule']:
             locations = x['protocolSection']['contactsLocationsModule']['locations']
             for l in locations:
@@ -70,3 +82,6 @@ print(timeit.timeit("chatgpt_version(trial_list)", setup=setup, number=1))
 
 setup = "from __main__ import tom_version, trial_list"
 print(timeit.timeit("tom_version(trial_list)", setup=setup, number=1))
+
+setup = "from __main__ import tom_version2, trial_list"
+print(timeit.timeit("tom_version2(trial_list)", setup=setup, number=1))
