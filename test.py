@@ -43,6 +43,16 @@ def original_version(trial_list):
             pass
     return locations_list
 
+def original_version_if(trial_list):
+    locations_list = []
+    for x in trial_list:
+        if 'contactsLocationsModule' in x['protocolSection'] and 'locations' in x['protocolSection']['contactsLocationsModule']:
+            locations = x['protocolSection']['contactsLocationsModule']['locations']
+            for l in locations:
+                l.update({'nctid':x['protocolSection']['identificationModule']['nctId']})
+            locations_list = locations_list + locations
+    return locations_list
+
 def chatgpt_version(trial_list):
     locations_list = [
         {**data_item, 'nctid': item['protocolSection']['identificationModule']['nctId']}
@@ -76,6 +86,9 @@ def tom_version2(trial_list):
 
 setup = "from __main__ import original_version, trial_list"
 print(f"Original: {timeit.timeit('original_version(trial_list)', setup=setup, number=1)}")
+
+setup = "from __main__ import original_version_if, trial_list"
+print(f"Original (if): {timeit.timeit('original_version_if(trial_list)', setup=setup, number=1)}")
 
 setup = "from __main__ import chatgpt_version, trial_list"
 print(f"ChatGPT: {timeit.timeit('chatgpt_version(trial_list)', setup=setup, number=1)}")
