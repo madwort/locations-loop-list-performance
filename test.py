@@ -32,21 +32,41 @@ for n in range(40000):
             }
         )
         
+def original_version(trial_list):
+    locations_list = []
+    for x in trial_list:
+        try:
+            locations = x['protocolSection']['contactsLocationsModule']['locations']
+            for l in locations:
+                l.update({'nctid':x['protocolSection']['identificationModule']['nctId']})
+            locations_list = locations_list + locations
+        except KeyError:
+            pass
+    return locations_list
+
+def chatgpt_version(trial_list):
+    locations_list = [
+        {**data_item, 'nctid': item['protocolSection']['identificationModule']['nctId']}
+        for item in trial_list
+        if 'contactsLocationsModule' in item['protocolSection'] and 'locations' in item['protocolSection']['contactsLocationsModule']
+        for data_item in item['protocolSection']['contactsLocationsModule']['locations']
+    ]
+    return locations_list
+
+def tom_version(trial_list):
+    locations_list = []
+    for x in trial_list:
+        if 'contactsLocationsModule' in x['protocolSection'] and 'locations' in x['protocolSection']['contactsLocationsModule']:
+            locations = x['protocolSection']['contactsLocationsModule']['locations']
+            for l in locations:
+                l.update({'nctid':x['protocolSection']['identificationModule']['nctId']})
+                locations_list.append(l)
+    return locations_list
 
 before_time = datetime.datetime.now()
 print(before_time)
 
-locations_list = []
-for x in trial_list:
-    try:
-        locations = x['protocolSection']['contactsLocationsModule']['locations']
-        for l in locations:
-            l.update({'nctid':x['protocolSection']['identificationModule']['nctId']})
-        locations_list = locations_list + locations
-    except KeyError:
-        pass
-
-locations_list_1 = locations_list
+locations_list_1 = original_version(trial_list)
 
 after_time = datetime.datetime.now()
 print(after_time)
@@ -59,15 +79,7 @@ print("-------")
 before_time = datetime.datetime.now()
 print(before_time)
 
-
-locations_list = [
-    {**data_item, 'nctid': item['protocolSection']['identificationModule']['nctId']}
-    for item in trial_list
-    if 'contactsLocationsModule' in item['protocolSection'] and 'locations' in item['protocolSection']['contactsLocationsModule']
-    for data_item in item['protocolSection']['contactsLocationsModule']['locations']
-]
-
-locations_list_2 = locations_list
+locations_list_2 = chatgpt_version(trial_list)
 
 after_time = datetime.datetime.now()
 print(after_time)
@@ -77,25 +89,14 @@ print(time_difference)
 
 assert(locations_list_1 == locations_list_2)
 print(locations_list_1[0])
-print(locations_list_1[0])
+print(locations_list_2[0])
 
 print("-------")
 
 before_time = datetime.datetime.now()
 print(before_time)
 
-
-locations_list = []
-for x in trial_list:
-    try:
-        locations = x['protocolSection']['contactsLocationsModule']['locations']
-        for l in locations:
-            l.update({'nctid':x['protocolSection']['identificationModule']['nctId']})
-            locations_list.append(l)
-    except KeyError:
-        pass
-
-locations_list_3 = locations_list
+locations_list_3 = tom_version(trial_list)
 
 after_time = datetime.datetime.now()
 print(after_time)
